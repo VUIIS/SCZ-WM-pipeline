@@ -35,24 +35,29 @@ addpath(genpath('DPABI_V2.3_170105'));
 
 %pwd = [root 'data/' subID]; % dir for current subject
 path = '/opt/scz/bin';
-addpath(genpath('/opt/scz/bin'));
+%addpath(genpath('/opt/scz/bin'));
 
 
 %% preprocessing
 mkdir([out_dir '/preprocess/FunImg/' xnat_subject]);
 mkdir([out_dir '/preprocess/T1Img/' xnat_subject]);
 
-copyfile(fmri_file,fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz')); % original T1 and rsfMRI
-copyfile(t1_file,fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii.gz'));% original T1 and rsfMRI
-
-gunzip(fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii.gz'));
-gunzip(fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz'));
-
+if contains(t1_file,'.gz')
+    copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/fmri.nii.gz',out_dir,xnat_subject)); % original T1 and rsfMRI
+    copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/t1.nii.gz',out_dir,xnat_subject));% original T1 and rsfMRI
+    gunzip(fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii.gz'));
+    gunzip(fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz')); 
+else 
+    copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/fmri.nii',out_dir,xnat_subject)); % original T1 and rsfMRI
+    copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/t1.nii',out_dir,xnat_subject));% original T1 and rsfMRI
+end
+    
+    
 fmri_nii = fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii');
 t1_nii = fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii');
 
 %% ==== load config file =============================
-
+% Change this path once code is containerized
 LOADFILENAME1=which(fullfile('prepro_saved.mat'));
 
 % Load the data file from current working directory
@@ -70,7 +75,7 @@ end
 
 % get num of TRs and num of slices from fMRI header
 
-info = niftiinfo(fmri_nii);
+info = niftiinfo(fmri_file);
 TR = info.PixelDimensions(4); disp(['TR =' num2str(TR) 's']);
 slnum = info.ImageSize(3); disp(['num of slices =' num2str(slnum)]);
 tpnum = info.ImageSize(4); disp(['num of time points =' num2str(tpnum)]);

@@ -42,16 +42,19 @@ addpath(genpath('/opt/scz/bin'));
 mkdir([out_dir '/preprocess/FunImg/' xnat_subject]);
 mkdir([out_dir '/preprocess/T1Img/' xnat_subject]);
 
-copyfile(fmri_file,fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz')); % original T1 and rsfMRI
-copyfile(t1_file,fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii.gz'));% original T1 and rsfMRI
-
-gunzip(fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii.gz'));
-gunzip(fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz'));
-
-t1_nii = fullfile[out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz'));
-
-%% move images to preprocess folder (is this already done?)
-% do we need a workdir?
+if contains(t1_file,'.gz')
+    copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/fmri.nii.gz',out_dir,xnat_subject)); % original T1 and rsfMRI
+    copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/t1.nii.gz',out_dir,xnat_subject));% original T1 and rsfMRI
+    gunzip(fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii.gz'));
+    gunzip(fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii.gz')); 
+else 
+    copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/fmri.nii',out_dir,xnat_subject)); % original T1 and rsfMRI
+    copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/t1.nii',out_dir,xnat_subject));% original T1 and rsfMRI
+end
+    
+    
+fmri_nii = fullfile([out_dir '/preprocess/FunImg/' xnat_subject],'fmri.nii');
+t1_nii = fullfile([out_dir '/preprocess/T1Img/' xnat_subject],'t1.nii');
 
 %% ==== load config file =============================
 
@@ -93,8 +96,9 @@ gmthresh=0.80; % set gray  matter mask threshold
 
 
 %###############################################################%
+cd(out_dir); 
 save([out_dir '/prepro_saved.mat'], 'Cfg', '-v7.3'); % save to subject's dir
-DPARSFA_run_SCZ([out_dir '/prepro_saved.mat']); % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+DPARSFA_run_SCZ([out_dir 'prepro_saved.mat']); % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cd(out_dir); 
 
 %% gen matrix
