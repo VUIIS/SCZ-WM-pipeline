@@ -98,7 +98,7 @@ gmthresh=0.80; % set gray  matter mask threshold
 %###############################################################%
 cd(out_dir); 
 save([out_dir '/prepro_saved.mat'], 'Cfg', '-v7.3'); % save to subject's dir
-DPARSFA_run_SCZ([out_dir '/prepro_saved.mat']); % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%DPARSFA_run_SCZ([out_dir '/prepro_saved.mat']); % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cd(out_dir); 
 
 %% gen matrix
@@ -122,17 +122,17 @@ list = dir([out_dir,'/result1_corrmatrix/FunImgARCFWD/']); list(1:2)=[];
 flags = struct('mask', false, 'mean', false, 'interp', 1, 'which', 1, 'wrap', [0 0 0], 'prefix', 'r');
 for i = 1:length(list)
     % reslice Fun image (61x73x61x300 -> 181x217x181)
-    spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+    spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result1_corrmatrix/FunImgARCFWD/',list(i).name,'/Detrend_4DVolume.nii']}, flags);
                 
     % reslice GM image (121x145x121 -> 181x217x181)
     tmp = dir([out_dir,'/result1_corrmatrix/T1ImgNewSegment/',list(i).name,'/wc1*.nii']); % gray matter segment
-    spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+    spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result1_corrmatrix/T1ImgNewSegment/',list(i).name,'/',tmp(1).name]}, flags);              
                 
     % reslice WM image (121x145x121 -> 181x217x181) 
     tmp = dir([out_dir,'/result1_corrmatrix/T1ImgNewSegment/',list(i).name,'/wc2*.nii']); % white matter segment
-    spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+    spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result1_corrmatrix/T1ImgNewSegment/',list(i).name,'/',tmp(1).name]}, flags);
     
     % init Brd_time / Eve_time / AAL time
@@ -202,7 +202,7 @@ copyfile([out_dir,'/preprocess/Results/ALFF_FunImgARCFWD'], [out_dir,'/result2_w
 list = dir([out_dir,'/result2_wm_alff/ALFF_FunImgARCFWD/ALFF*.nii']);
 flags = struct('mask', false, 'mean', false, 'interp', 1, 'which', 1, 'wrap', [0 0 0], 'prefix', 'r');
 for i = 1:length(list)  
-    spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+    spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result2_wm_alff/ALFF_FunImgARCFWD/', list(i).name]}, flags);      
     vv = spm_vol([out_dir,'/result2_wm_alff/ALFF_FunImgARCFWD/r', list(i).name]); img = spm_read_vols(vv);
 
@@ -222,7 +222,7 @@ copyfile([out_dir,'/preprocess/Results/fALFF_FunImgARCFWD'],[out_dir,'/result3_w
 list=dir([out_dir,'/result3_wm_falff/fALFF_FunImgARCFWD/fALFF*.nii']);
 flags = struct('mask', false, 'mean', false, 'interp', 1, 'which', 1, 'wrap', [0 0 0], 'prefix', 'r');
 for i=1:length(list)
-    spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+    spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result3_wm_falff/fALFF_FunImgARCFWD/', list(i).name]}, flags);
     vv = spm_vol([out_dir,'/result3_wm_falff/fALFF_FunImgARCFWD/r', list(i).name]); img = spm_read_vols(vv);    
 
@@ -242,7 +242,7 @@ copyfile([out_dir,'/preprocess/Results/ReHo_FunImgARCFWD'],[out_dir,'/result4_wm
 list=dir([out_dir,'/result4_wm_reho/ReHo_FunImgARCFWD/ReHo*.nii']);
 flags = struct('mask', false, 'mean', false, 'interp', 1, 'which', 1, 'wrap', [0 0 0], 'prefix', 'r');
 for i=1:length(list)
-     spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+     spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result4_wm_reho/ReHo_FunImgARCFWD/', list(i).name]}, flags);  
     vv = spm_vol([out_dir,'/result4_wm_reho/ReHo_FunImgARCFWD/r', list(i).name]); img = spm_read_vols(vv); 
 
@@ -262,7 +262,7 @@ copyfile([out_dir,'/preprocess/Results/DegreeCentrality_FunImgARCFWD'],[out_dir,
 list=dir([out_dir,'/result5_wm_degree_centrality/DegreeCentrality_FunImgARCFWD/DegreeCentrality_PositiveWeighted*.nii']);
 flags = struct('mask', false, 'mean', false, 'interp', 1, 'which', 1, 'wrap', [0 0 0], 'prefix', 'r');
 for i=1:length(list)
-     spm_reslice_quiet({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
+     spm_reslice({[path,'/atlas/Brodmann/Brodmann_YCG_newBA48.nii'] ...
                                 [out_dir,'/result5_wm_degree_centrality/DegreeCentrality_FunImgARCFWD/', list(i).name]}, flags);  
     vv = spm_vol([out_dir,'/result5_wm_degree_centrality/DegreeCentrality_FunImgARCFWD/r', list(i).name]); img = spm_read_vols(vv);  
 

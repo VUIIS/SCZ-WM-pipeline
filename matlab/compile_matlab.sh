@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 #
 # Compile the matlab code so we can run it without a matlab license. To create a 

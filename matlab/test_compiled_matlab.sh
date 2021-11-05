@@ -4,8 +4,7 @@
 # runtime is installed. Much better to make sure it's working before actually 
 # building the singularity container.
 
-bin/run_matlab_entrypoint.sh /usr/local/MATLAB/MATLAB_Runtime/v97 \
-    t1_niigz ../INPUTS/t1.nii.gz \
-    seg_niigz ../INPUTS/seg.nii.gz \
-    diameter_mm 30 \
-    out_dir ../OUTPUTS
+bin/run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v97 \
+    t1_niigz /home/dylan/Documents/SCZ/INPUTS/t1.nii.gz \
+    fmri_niigz /home/dylan/Documents/SCZ/INPUTS/fmri.nii.gz \
+    out_dir /home/dylan/Documents/SCZ/OUTPUTS

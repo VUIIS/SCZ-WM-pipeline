@@ -13,14 +13,13 @@ copy_inputs.sh
 # Then the matlab. It is written so that we must pass the inputs as command
 # line arguments, although we could use matlab's getenv to pull them from the
 # environment instead if desired.
-run_matlab_entrypoint.sh "${MATLAB_RUNTIME}" \
+run_spm12.sh "${MATLAB_RUNTIME}" function scz_entrypoint \
     t1_niigz "${out_dir}"/t1.nii.gz \
     fmri_niigz "${out_dir}"/fmri.nii.gz \
-    label_info "${label_info}" \
     out_dir "${out_dir}"
 
 # FSL based PDF creation
-make_pdf.sh
+#make_pdf.sh
 
 # Finalize and organize outputs
-finalize.sh
+#finalize.sh

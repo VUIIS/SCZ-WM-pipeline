@@ -12,7 +12,7 @@
 echo Running $(basename "${BASH_SOURCE}")
 
 # Initialize defaults for any input parameters where that seems useful
-export label_info="UNKNOWN SCAN"
+export xnat_subject="TEST_SUBJ"
 export out_dir=/OUTPUTS
 
 # Parse input options
@@ -32,13 +32,18 @@ do
             # size, etc - e.g. output of slant or multi-atlas pipelines.
             export seg_niigz="$2"; shift; shift ;;
 
-        --label_info)
-            # Labels from XNAT that we will use to label the QA PDF
-            export label_info="$2"; shift; shift ;;
-
         --out_dir)
             # Where outputs will be stored. Also the working directory
             export out_dir="$2"; shift; shift ;;
+
+        --xnat_project)
+            export xnat_project="$2"; shift; shift ;;
+
+        --xnat_subject)
+            export xnat_subject="$2"; shift; shift ;;
+
+        --xnat_session)
+            xport xnat_session="$2"; shift; shift ;;
 
         *)
             echo "Input ${1} not recognized"

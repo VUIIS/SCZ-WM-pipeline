@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 #
 # Check if any of the matlab source code is newer than the compiled executable.
 
