@@ -20,7 +20,11 @@ if ischar(fmri_file)
     eval(['fmri_file = ' fmri_file]);
 end
 
-if isdeployed
+if ischar(t1_file)
+    t1_file=convertCharsToStrings(t1_file);
+    xnat_project=convertCharsToStrings(xnat_project
+%%% CONVERT CHAR TO STRING (CHEKC WITHIN CELL TOO)
+
 
 %% Prepare input files and move to output directory
 disp('Preparing inputs')

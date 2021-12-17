@@ -16,8 +16,10 @@ xnat_session   = inp.xnat_session;
 out_dir = inp.out_dir;
 
 % Convert fmri_file to cell if multiple inputs are required
-if ischar(fmri_file)
+if contains(fmri_file,'}')
     eval(['fmri_file = ' fmri_file]);
+else
+    fmri_file=convertCharsToStrings(fmri_file);
 end
 
 % Convert chars to strings if deployed
@@ -90,6 +92,10 @@ if iscell(fmri_file)
                 t1_js = [t1_file(1:end-7) '.json'];
                 copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-4) '.json']));
             end
+            
+            fprintf(t1_file)
+            fprintf(t1_name)
+            fprintf(out_dir)
             
             copyfile(fmri_file{i},sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),fmri_name)); % original T1 and rsfMRI
             copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),t1_name));% original T1 and rsfMRI
