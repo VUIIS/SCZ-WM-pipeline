@@ -6,12 +6,19 @@
 #
 # Example usage:
 # 
-# pipeline_entrypoint.sh --image_niigz /path/to/image.nii.gz --diameter_mm 30
+# pipeline_entrypoint.sh --t1_niigz image.nii.gz
+#                        --fmri_niigz {image1.nii.gz,image2.nii.gz}
+#                        --out_dir /output/directory
+#                        --xnat_project XNAT_project_name
+#                        --xnat_subject XNAT_subject_name
+#                        --xnat_session XNAT_session_name
+#
+# Note: fmri input must be within curly brackets for Matlab to accept 
+#       multiple inputs. Separate file names by comma.
 
-# This statement at the top of every bash script is helpful for debugging
 echo Running $(basename "${BASH_SOURCE}")
 
-# Initialize defaults for any input parameters where that seems useful
+# Initialize defaults 
 export xnat_subject="TEST_SUBJ"
 export out_dir=/OUTPUTS
 
@@ -22,18 +29,12 @@ do
     case $key in
         
         --t1_niigz)
-            # Our example code takes a single 3D T1 nifti image as input. This
-            # is expected to be the fully qualified path and filename.
             export t1_niigz="$2"; shift; shift ;;
 
         --fmri_niigz)
-            # Segmentation of the T1. Useful here to provide example code for
-            # viewing ROIs. Expected to be in the same geometry, position, voxel
-            # size, etc - e.g. output of slant or multi-atlas pipelines.
-            export seg_niigz="$2"; shift; shift ;;
+            export fmri_niigz="$2"; shift; shift ;;
 
         --out_dir)
-            # Where outputs will be stored. Also the working directory
             export out_dir="$2"; shift; shift ;;
 
         --xnat_project)
@@ -43,17 +44,16 @@ do
             export xnat_subject="$2"; shift; shift ;;
 
         --xnat_session)
-            xport xnat_session="$2"; shift; shift ;;
+            export xnat_session="$2"; shift; shift ;;
 
         *)
-            echo "Input ${1} not recognized"
+            echo "Input ${1} not recognized. Exiting program."
+            exit
             shift ;;
 
     esac
 done
 
-
-# Now that we have all the inputs stored in environment variables, call the
-# main pipeline. We run it in xvfb so that we have a virtual display available.
+# Run pipeline with xvfb for display window
 xvfb-run -n $(($$ + 99)) -s '-screen 0 1600x1200x24 -ac +extension GLX' \
     bash pipeline_main.sh

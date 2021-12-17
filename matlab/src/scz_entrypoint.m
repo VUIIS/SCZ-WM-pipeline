@@ -1,8 +1,10 @@
 function scz_entrypoint(varargin)
-
 % This function serves as the entrypoint to the matlab part of the
 % pipeline. Its purpose is to parse the command line arguments, then call
 % the main function that actually does the work.
+
+% If there are multiple fmris, store them as a cell when inputing file
+% names to function (i.e. use {})
 
 %% Just quit, if requested - needed for Singularity build
 if numel(varargin)==1 && strcmp(varargin{1},'quit') && isdeployed
@@ -16,11 +18,7 @@ end
 % "optional", providing default values when appropriate.
 P = inputParser;
 
-% Our example code takes a single 3D nifti T1 as input. This argument
-% is expected to contain the fully qualified path and filename.
 addOptional(P,'t1_niigz','')
-
-% We also want a corresponding segmentation.
 addOptional(P,'fmri_niigz','')
 
 % When processing runs on XNAT, we generally have the project, subject,
@@ -29,10 +27,9 @@ addOptional(P,'fmri_niigz','')
 addOptional(P,'xnat_project','UNK_PROJ');
 addOptional(P,'xnat_subject','UNK_SUBJ');
 addOptional(P,'xnat_session','UNK_SESS');
-addOptional(P,'xnat_scan_t1','UNK_SCAN_T1');
-addOptional(P,'xnat_scan_fmri','UNK_SCAN_FMRI');
 
-% Finally, we need to know where to store the outputs.
+
+% where to store the outputs.
 addOptional(P,'out_dir','/OUTPUTS');
 
 % Parse

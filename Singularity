@@ -14,7 +14,7 @@ From: ubuntu:20.04
 
 %files
   # Used to copy files into the container
-  bin 			/opt/pipeline
+  matlab 			/opt/pipeline
   src 			/opt/pipeline
   README.md 	/opt/pipeline
 
@@ -25,9 +25,7 @@ From: ubuntu:20.04
   
   # Install misc tools
   apt update
-  apt install -y wget unzip zip bc ghostscript imagemagick xvfb
-
-
+  apt install -y wget unzip zip bc xvfb curl
 
   # Matlab Compiled Runtime installation. Uncomment the wget command to download 
   # The installed version of the runtime must match the Matlab version that was used to compile the code. 
@@ -45,10 +43,24 @@ From: ubuntu:20.04
   # a bit at the beginning that makes this work.
   /opt/pipeline/matlab/bin/run_matlab_entrypoint.sh ${mcr_location} quit
 
+  # Install and set up miniconda
+  curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh && \
+  bash Miniconda3-4.5.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
+  rm Miniconda3-4.5.11-Linux-x86_64.sh
+
+  # Installing python packages
+  conda install -y python=3.7.1 pip=19.1
+  chmod -R a+rX /usr/local/miniconda; sync && \
+  chmod +x /usr/local/miniconda/bin/*; sync && \
+  conda-build purge-all; sync && \
+  conda clean -tipsy && sync
+  
+  # Installing pip packages
+  pip install --no-cache-dir fpdf 
+
   # Create a few directories to use as bind points when we run the container
   mkdir /INPUTS
   mkdir /OUTPUTS
-  mkdir /workdir
 
   # Clean up unneeded packages and cache
   apt clean && apt -y autoremove
