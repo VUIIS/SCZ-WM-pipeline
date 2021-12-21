@@ -24,8 +24,19 @@ From: ubuntu:20.04
 %post
   
   # Install misc tools
+
   apt-get update
-  apt-get install -y wget unzip zip bc ghostscript imagemagick xvfb curl python3.7
+  apt-get install -y --no-install-recommends \
+    wget \
+    unzip \
+    zip \
+    bc \
+    ghostscript \
+    imagemagick \
+    xvfb \
+    curl \
+    python3.8 
+  
   apt-get -y clean
   rm -rf /var/lib/apt/lists/*
 
@@ -55,6 +66,7 @@ From: ubuntu:20.04
   LANG="C.UTF-8" \
   LC_ALL="C.UTF-8" \
   PYTHONNOUSERSITE=1
+  MCR_INHIBIT_CTF_LOCK=1
 
   # Installing python packages
   conda install -y pip=19.1
@@ -64,7 +76,7 @@ From: ubuntu:20.04
   #conda clean -tipsy && sync
   
   # Installing pip packages
-  pip install --no-cache-dir fpdf 
+  python3 -m pip install --no-cache-dir fpdf 
 
   # Create a few directories to use as bind points when we run the container
   mkdir /INPUTS
@@ -90,6 +102,8 @@ From: ubuntu:20.04
 
 
 %runscript
+  
+  alias python='python3.8'
 
   # We just call our entrypoint, passing along all the command line arguments 
   # that were given at the singularity run command line.
