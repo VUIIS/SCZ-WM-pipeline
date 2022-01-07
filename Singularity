@@ -36,6 +36,8 @@ From: ubuntu:20.04
     xvfb \
     curl \
     ca-certificates \
+    default-jre \
+    libxtst6 \
     python3.8 
   
   apt-get -y clean
