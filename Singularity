@@ -35,6 +35,7 @@ From: ubuntu:20.04
     imagemagick \
     xvfb \
     curl \
+    ca-certificates \
     python3.8 
   
   apt-get -y clean
@@ -99,7 +100,7 @@ From: ubuntu:20.04
   # We add the src directory, which contains shell scripts etc; and the 
   # matlab/bin directory, which contains the compiled Matlab binary.
   export PATH=/opt/pipeline/src:/opt/pipeline/matlab/bin:${PATH}
-
+  export MCR_INHIBIT_CTF_LOCK=1
 
 %runscript
   
