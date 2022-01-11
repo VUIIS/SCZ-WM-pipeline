@@ -2,15 +2,23 @@
 #
 # Test the built singularity container.
 
+export t1_niigz="/home/dylan/Documents/SCZ/INPUTS/t1.nii.gz"
+export fmri_niigz="/home/dylan/Documents/SCZ/INPUTS/fmri.nii.gz"
+export xnat_project="TEST_PROJ"
+export xnat_session="TEST_SESS"
+export xnat_subject="TEST_SUBJ"
+export out_dir="/home/dylan/Documents/SCZ/OUTPUTS"
+
 
 singularity run --cleanenv --contain \
-    --home $(pwd -P)/INPUTS \
-    --bind workdir:/tmp \
-    --bind INPUTS:/INPUTS \
-    --bind OUTPUTS:/OUTPUTS \
-    demo.simg \
-    --t1_niigz /INPUTS/t1.nii.gz \
-    --fmri_niigz /INPUTS/seg.nii.gz \
-    --diameter_mm 30 \
-    --out_dir /OUTPUTS
+    --home $(pwd -P) \
+    --bind $(pwd -P)/INPUTS:/INPUTS \
+    --bind $(pwd -P)/OUTPUTS:/OUTPUTS \
+    SCZ_WM_pipeline.simg \
+    --t1_niigz "${t1_niigz}" \
+    --fmri_niigz "${fmri_niigz}" \
+    --out_dir "${out_dir}" \
+    --xnat_project "${xnat_project}" \
+    --xnat_subject "${xnat_subject}" \
+    --xnat_session "${xnat_session}"
 

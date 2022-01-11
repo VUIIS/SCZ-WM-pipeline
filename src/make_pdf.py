@@ -17,9 +17,11 @@ pdf.set_font('Times','',14.0)
 project = os.environ["xnat_project"]
 subject = os.environ["xnat_subject"]
 session = os.environ["xnat_session"]
-scan = os.environ["fmri_niigz"]
+fmri_scan = os.environ["fmri_niigz"]
 
-pdf.cell(page_width,0.0,'XNAT Project: ' + project + ' Subject: ' + subject + ' Session: ' +  session + ' Scan: ' +  scan,align='C')
+scan = fmri_scan.split('/')[-1]
+
+pdf.cell(page_width,0.0,'XNAT Project: ' + project + ' Subject: ' + subject + ' Session: ' +  session,align='C')
 pdf.ln(8)
 
 # Get current time and write to header
