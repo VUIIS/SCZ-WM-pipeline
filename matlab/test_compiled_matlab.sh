@@ -8,7 +8,7 @@
 bin/run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v97 \
     function scz_entrypoint \
     t1_niigz "/home/dylan/Documents/SCZ/INPUTS/t1.nii.gz" \
-    fmri_niigz "{'/home/dylan/Documents/SCZ/INPUTS/fmri.nii.gz'}" \
+    fmri_niigz "/home/dylan/Documents/SCZ/INPUTS/fmri.nii.gz" \
     out_dir "/home/dylan/Documents/SCZ/OUTPUTS" \
     xnat_project "TEST_PROJ" \
     xnat_subject "TEST_SUBJ" \

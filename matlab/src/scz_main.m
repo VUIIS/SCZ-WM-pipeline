@@ -39,6 +39,28 @@ end
 
 %% preprocessing
 
+% i=1;
+% mkdir([out_dir '/preprocess/FunImg/' num2str(i)]);
+% mkdir([out_dir '/preprocess/T1Img/' num2str(i)]);
+% 
+% tmp = split(fmri_file,'/');
+% fmri_name = tmp{end};
+% tmp = split(t1_file,'/');
+% t1_name = tmp{end};
+% %check for json
+% tmp=dir(fmri_file);
+% if isempty(dir([tmp.folder,'/*.json']))
+%     fprintf('No .json files found. Extracting header info from nifti.');
+% else
+%     % copy json files
+%     fmri_js = [fmri_file(1:end-7) '.json'];
+%     copyfile(fmri_js,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),[fmri_name(1:end-7) '.json']));
+%     t1_js = [t1_file(1:end-7) '.json'];
+%     copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-7) '.json']));
+% end
+% copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),fmri_name)); % original T1 and rsfMRI
+% copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i) ,t1_name));% original T1 and rsfMRI
+
 
 if iscell(fmri_file)
     if contains(t1_file,'.gz')
@@ -169,7 +191,7 @@ for i=3:length(list)
     
     % get num of TRs and num of slices from fMRI header
     tmp = dir([out_dir,'/preprocess/FunImg/' list(i).name '/*.nii.gz']);
-    info = niftiinfo([out_dir,'/preprocess/FunImg/' list(i).name '/' tmp.name]); % modified in v4: list(3) -> list(i) --------------------------------
+    info = niftiinfo([out_dir,'/preprocess/FunImg/' list(i).name '/' tmp.name(1:end-3)]); % modified in v4: list(3) -> list(i) --------------------------------
     
     % ----------------------added in v3 (start)----------------
     pdim = info.PixelDimensions;

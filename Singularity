@@ -15,7 +15,7 @@ From: ubuntu:20.04
 %files
   # Used to copy files into the container
   matlab 			/opt/pipeline
-  src 			/opt/pipeline
+  src 			  /opt/pipeline
   README.md 	/opt/pipeline
 
 %labels
@@ -38,10 +38,15 @@ From: ubuntu:20.04
     ca-certificates \
     default-jre \
     libxtst6 \
-    python3.8 
+    software-properties-common
+
+  add-apt-repository ppa:deadsnakes/ppa
+  apt update
+  apt install -y --no-install-recommends python3.7
   
   apt-get -y clean
   rm -rf /var/lib/apt/lists/*
+
 
   # Matlab Compiled Runtime installation. Uncomment the wget command to download 
   # The installed version of the runtime must match the Matlab version that was used to compile the code. 
@@ -72,7 +77,8 @@ From: ubuntu:20.04
   MCR_INHIBIT_CTF_LOCK=1
 
   # Installing python packages
-  conda install -y pip=19.1
+  conda install -y pip=19.1 
+
   chmod -R a+rX /usr/local/miniconda; sync && \
   chmod +x /usr/local/miniconda/bin/*; sync && \
   #conda-build purge-all; sync && \
