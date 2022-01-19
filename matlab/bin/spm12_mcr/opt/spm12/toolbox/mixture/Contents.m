@@ -1,2 +1,0 @@
-% SPM Mixture Modelling Toolbox 
-%

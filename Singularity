@@ -15,7 +15,7 @@ From: ubuntu:20.04
 %files
   # Used to copy files into the container
   matlab 			/opt/pipeline
-  src 			/opt/pipeline
+  src 			  /opt/pipeline
   README.md 	/opt/pipeline
 
 %labels
@@ -32,13 +32,12 @@ From: ubuntu:20.04
     zip \
     bc \
     ghostscript \
-    imagemagick \
     xvfb \
     curl \
     ca-certificates \
     default-jre \
     libxtst6 \
-    python3.8 
+    software-properties-common
   
   apt-get -y clean
   rm -rf /var/lib/apt/lists/*
@@ -57,29 +56,7 @@ From: ubuntu:20.04
   # Matlab executable must be run now to extract the CTF archive, because
   # now is the only time the container is writeable. The matlab entrypoint has
   # a bit at the beginning that makes this work.
-  /opt/pipeline/matlab/bin/run_spm12.sh ${mcr_location} quit
-
-  # Install and set up miniconda
-  curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh && \
-  bash Miniconda3-4.5.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
-  rm Miniconda3-4.5.11-Linux-x86_64.sh
-
-  PATH="/usr/local/miniconda/bin:$PATH" \
-  CPATH="/usr/local/miniconda/include/:$CPATH" \
-  LANG="C.UTF-8" \
-  LC_ALL="C.UTF-8" \
-  PYTHONNOUSERSITE=1
-  MCR_INHIBIT_CTF_LOCK=1
-
-  # Installing python packages
-  conda install -y pip=19.1
-  chmod -R a+rX /usr/local/miniconda; sync && \
-  chmod +x /usr/local/miniconda/bin/*; sync && \
-  #conda-build purge-all; sync && \
-  #conda clean -tipsy && sync
-  
-  # Installing pip packages
-  python3 -m pip install --no-cache-dir fpdf 
+  /opt/pipeline/matlab/bin/run_spm12.sh ${mcr_location} quit  
 
   # Create a few directories to use as bind points when we run the container
   mkdir /INPUTS
@@ -106,8 +83,6 @@ From: ubuntu:20.04
 
 %runscript
   
-  alias python='python3.8'
-
   # We just call our entrypoint, passing along all the command line arguments 
   # that were given at the singularity run command line.
   pipeline_entrypoint.sh "$@"

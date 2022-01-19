@@ -39,6 +39,28 @@ end
 
 %% preprocessing
 
+% i=1;
+% mkdir([out_dir '/preprocess/FunImg/' num2str(i)]);
+% mkdir([out_dir '/preprocess/T1Img/' num2str(i)]);
+% 
+% tmp = split(fmri_file,'/');
+% fmri_name = tmp{end};
+% tmp = split(t1_file,'/');
+% t1_name = tmp{end};
+% %check for json
+% tmp=dir(fmri_file);
+% if isempty(dir([tmp.folder,'/*.json']))
+%     fprintf('No .json files found. Extracting header info from nifti.');
+% else
+%     % copy json files
+%     fmri_js = [fmri_file(1:end-7) '.json'];
+%     copyfile(fmri_js,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),[fmri_name(1:end-7) '.json']));
+%     t1_js = [t1_file(1:end-7) '.json'];
+%     copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-7) '.json']));
+% end
+% copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),fmri_name)); % original T1 and rsfMRI
+% copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i) ,t1_name));% original T1 and rsfMRI
+
 
 if iscell(fmri_file)
     if contains(t1_file,'.gz')
@@ -169,7 +191,7 @@ for i=3:length(list)
     
     % get num of TRs and num of slices from fMRI header
     tmp = dir([out_dir,'/preprocess/FunImg/' list(i).name '/*.nii.gz']);
-    info = niftiinfo([out_dir,'/preprocess/FunImg/' list(i).name '/' tmp.name]); % modified in v4: list(3) -> list(i) --------------------------------
+    info = niftiinfo([out_dir,'/preprocess/FunImg/' list(i).name '/' tmp.name(1:end-3)]); % modified in v4: list(3) -> list(i) --------------------------------
     
     % ----------------------added in v3 (start)----------------
     pdim = info.PixelDimensions;
@@ -430,7 +452,7 @@ for i = 1:length(list)
     % --------------------- added in v2 (start) ------------------------------------------------------------------------------------ 
     save([out_dir,'/result1_corrmatrix/tc_', list(i).name, '.mat'], 'Brd_time','Eve_time', 'AAL_time', 'DKT_time', 'HCP_time', 'SCH2_time', 'SCH4_time');
     
-    figure('visible','off');
+    F = figure('visible','off');
     subplot(3,2,1); imagesc(matrEB);   axis tight; colormap jet; caxis([-1 1]); colorbar; title('Eve-Brodmann');
     subplot(3,2,2); imagesc(matrEA);   axis tight; colormap jet; caxis([-1 1]); colorbar; title('Eve-AAL');
     subplot(3,2,3); imagesc(matrED);   axis tight; colormap jet; caxis([-1 1]); colorbar; title('Eve-DKT'); 
@@ -440,6 +462,12 @@ for i = 1:length(list)
     
     saveas(gcf, [out_dir,'/result1_corrmatrix/matr_', list(i).name, '.png']);
     %  -------------------- added in v2 (end) --------------------------------------------------------------------------------------
+    
+    % --------------------- added by Dylan Lawless -----------------%
+    % Make pdf
+    mkdir([out_dir,'/PDF']);
+    pdf_file = fullfile(out_dir,sprintf('/PDF/SCZ_WM_CorrMatr.pdf'));
+    print(F,'-dpdf',pdf_file);
     
     % --------------------- added in v3 (start) ------------------------------------------------------------------------------------ 
     delete([out_dir '/result1_corrmatrix/FunImgARCFWD/',list(i).name,'/rDetrend_4DVolume.nii']);
@@ -568,6 +596,67 @@ if exist([out_dir '/preprocess/FunImgARC/'], 'dir'), rmdir([out_dir '/preprocess
 if exist([out_dir '/preprocess/FunImgARCF/'], 'dir'), rmdir([out_dir '/preprocess/FunImgARCF/'], 's'); end
 if exist([out_dir '/preprocess/FunImgARCFW/'], 'dir'), rmdir([out_dir '/preprocess/FunImgARCFW/'], 's'); end
 if exist([out_dir '/preprocess/FunImgARCFWD/'], 'dir'), rmdir([out_dir '/preprocess/FunImgARCFWD/'], 's'); end
+
+%% Zip all nifti files
+
+cd(out_dir)
+
+A = dir(out_dir);
+for i = 3:length(A)
+    if A(i).isdir == 0
+        continue
+    else 
+        cd(A(i).folder);
+        B = dir(A(i).name);
+        for j = 3:length(B)
+            if endsWith(B(j).name,'.nii')
+                cd(B(j).folder);
+                gzip(B(j).name);
+                delete(B(j).name);
+            elseif B(j).isdir == 0
+                continue
+            else
+                cd(B(j).folder);
+                C = dir(B(j).name);
+                for k = 3:length(C)
+                    if C(k).isdir == 1
+                        cd(C(k).folder);
+                        D = dir(C(k).name);
+                        for l=3:length(D)
+                            if D(l).isdir == 1
+                                cd(D(l).folder);
+                                E = dir(D(l).name);
+                                for m=3:length(E)
+                                    if endsWith(E(m).name,'.nii')
+                                        cd(E(m).folder);
+                                        gzip(E(m).name);
+                                        delete(E(m).name);
+                                    else
+                                        continue
+                                    end
+                                end
+                            elseif endsWith(D(l).name,'.nii')
+                                cd(D(l).folder);
+                                gzip(D(l).name);
+                                delete(D(l).name);
+                            else
+                                continue
+                            end
+                        end
+                    elseif endsWith(C(k).name,'.nii')
+                        cd(C(k).folder);
+                        gzip(C(k).name);
+                        delete(C(k).name);
+                    else
+                        continue
+                    end
+                end
+            end
+        end
+    end
+end
+
+
 disp('all done');
 exit
 end

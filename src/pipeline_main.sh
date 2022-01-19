@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#
+
 # Main pipeline
 echo Running $(basename "${BASH_SOURCE}")
 
@@ -11,8 +11,3 @@ run_spm12.sh "${MATLAB_RUNTIME}" function scz_entrypoint \
     xnat_project "${xnat_project}" \
     xnat_subject "${xnat_subject}" \
     xnat_session "${xnat_session}"
-
-# PDF creation and zipping nifti files
-cd ${out_dir}
-make_pdf.py
-
