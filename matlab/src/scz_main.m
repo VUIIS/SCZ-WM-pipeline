@@ -452,7 +452,7 @@ for i = 1:length(list)
     % --------------------- added in v2 (start) ------------------------------------------------------------------------------------ 
     save([out_dir,'/result1_corrmatrix/tc_', list(i).name, '.mat'], 'Brd_time','Eve_time', 'AAL_time', 'DKT_time', 'HCP_time', 'SCH2_time', 'SCH4_time');
     
-    figure('visible','off');
+    F = figure('visible','off');
     subplot(3,2,1); imagesc(matrEB);   axis tight; colormap jet; caxis([-1 1]); colorbar; title('Eve-Brodmann');
     subplot(3,2,2); imagesc(matrEA);   axis tight; colormap jet; caxis([-1 1]); colorbar; title('Eve-AAL');
     subplot(3,2,3); imagesc(matrED);   axis tight; colormap jet; caxis([-1 1]); colorbar; title('Eve-DKT'); 
@@ -462,6 +462,12 @@ for i = 1:length(list)
     
     saveas(gcf, [out_dir,'/result1_corrmatrix/matr_', list(i).name, '.png']);
     %  -------------------- added in v2 (end) --------------------------------------------------------------------------------------
+    
+    % --------------------- added by Dylan Lawless -----------------%
+    % Make pdf
+    mkdir([out_dir,'/PDF']);
+    pdf_file = fullfile(out_dir,sprintf('/PDF/SCZ_WM_CorrMatr.pdf'));
+    print(F,'-dpdf',pdf_file);
     
     % --------------------- added in v3 (start) ------------------------------------------------------------------------------------ 
     delete([out_dir '/result1_corrmatrix/FunImgARCFWD/',list(i).name,'/rDetrend_4DVolume.nii']);
@@ -590,6 +596,67 @@ if exist([out_dir '/preprocess/FunImgARC/'], 'dir'), rmdir([out_dir '/preprocess
 if exist([out_dir '/preprocess/FunImgARCF/'], 'dir'), rmdir([out_dir '/preprocess/FunImgARCF/'], 's'); end
 if exist([out_dir '/preprocess/FunImgARCFW/'], 'dir'), rmdir([out_dir '/preprocess/FunImgARCFW/'], 's'); end
 if exist([out_dir '/preprocess/FunImgARCFWD/'], 'dir'), rmdir([out_dir '/preprocess/FunImgARCFWD/'], 's'); end
+
+%% Zip all nifti files
+
+cd(out_dir)
+
+A = dir(out_dir);
+for i = 3:length(A)
+    if A(i).isdir == 0
+        continue
+    else 
+        cd(A(i).folder);
+        B = dir(A(i).name);
+        for j = 3:length(B)
+            if endsWith(B(j).name,'.nii')
+                cd(B(j).folder);
+                gzip(B(j).name);
+                delete(B(j).name);
+            elseif B(j).isdir == 0
+                continue
+            else
+                cd(B(j).folder);
+                C = dir(B(j).name);
+                for k = 3:length(C)
+                    if C(k).isdir == 1
+                        cd(C(k).folder);
+                        D = dir(C(k).name);
+                        for l=3:length(D)
+                            if D(l).isdir == 1
+                                cd(D(l).folder);
+                                E = dir(D(l).name);
+                                for m=3:length(E)
+                                    if endsWith(E(m).name,'.nii')
+                                        cd(E(m).folder);
+                                        gzip(E(m).name);
+                                        delete(E(m).name);
+                                    else
+                                        continue
+                                    end
+                                end
+                            elseif endsWith(D(l).name,'.nii')
+                                cd(D(l).folder);
+                                gzip(D(l).name);
+                                delete(D(l).name);
+                            else
+                                continue
+                            end
+                        end
+                    elseif endsWith(C(k).name,'.nii')
+                        cd(C(k).folder);
+                        gzip(C(k).name);
+                        delete(C(k).name);
+                    else
+                        continue
+                    end
+                end
+            end
+        end
+    end
+end
+
+
 disp('all done');
 exit
 end

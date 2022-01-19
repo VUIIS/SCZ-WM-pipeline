@@ -31,6 +31,7 @@ addOptional(P,'xnat_session','UNK_SESS');
 
 % where to store the outputs.
 addOptional(P,'out_dir','/OUTPUTS');
+addOptional(P,'in_dir','/INPUTS');
 
 % Parse
 parse(P,varargin{:});
