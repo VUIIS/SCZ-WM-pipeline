@@ -1,2 +1,0 @@
-%
-% MONTE CARLO INFERENCE (MCI) toolbox
