@@ -14,7 +14,7 @@ singularity run --cleanenv --contain \
     --home $(pwd -P) \
     --bind $(pwd -P)/INPUTS:/INPUTS \
     --bind $(pwd -P)/OUTPUTS:/OUTPUTS \
-    SCZ_WM_pipeline_v2.simg \
+    scz_wm_v2.simg \
     --t1_niigz "${t1_niigz}" \
     --fmri_niigz "${fmri_niigz}" \
     --out_dir "${out_dir}" \
