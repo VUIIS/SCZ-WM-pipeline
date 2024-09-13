@@ -80,10 +80,10 @@ if iscell(fmri_file)
                 fprintf('No .json files found. Extracting header info from nifti.');
             else
                 % copy json files
-                fmri_js = [fmri_file{i}(1:end-7) '.json'];
+                fmri_js = replace(fmri_file,'.nii.gz','.json'); %[fmri_file(1:end-7) '.json'];
                 copyfile(fmri_js,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),[fmri_name(1:end-7) '.json']));
-                t1_js = [t1_file(1:end-7) '.json'];
-                copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-7) '.json']));
+                %t1_js = [t1_file(1:end-7) '.json'];
+                %copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-7) '.json']));
             end
             
 
@@ -109,10 +109,10 @@ if iscell(fmri_file)
                 fprintf('No .json files found. Extracting header info from nifti.');
             else
                 % copy json files
-                fmri_js = [fmri_file{i}(1:end-7) '.json'];
+                fmri_js = replace(fmri_file,'.nii.gz','.json'); %[fmri_file(1:end-7) '.json'];
                 copyfile(fmri_js,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),[fmri_name(1:end-4) '.json']));
-                t1_js = [t1_file(1:end-7) '.json'];
-                copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-4) '.json']));
+                %t1_js = [t1_file(1:end-7) '.json'];
+                %copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-4) '.json']));
             end
             
             fprintf(t1_file)
@@ -139,10 +139,10 @@ else
             fprintf('No .json files found. Extracting header info from nifti.');
         else
             % copy json files
-            fmri_js = [fmri_file(1:end-7) '.json'];
+            fmri_js = replace(fmri_file,'.nii.gz','.json'); %[fmri_file(1:end-7) '.json'];
             copyfile(fmri_js,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),[fmri_name(1:end-7) '.json']));
-            t1_js = [t1_file(1:end-7) '.json'];
-            copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-7) '.json']));
+            %t1_js = [t1_file(1:end-7) '.json'];
+            %copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-7) '.json']));
         end
         copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),fmri_name)); % original T1 and rsfMRI
         copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),t1_name));% original T1 and rsfMRI
@@ -161,10 +161,10 @@ else
             fprintf('No .json files found. Extracting header info from nifti.');
         else
             % copy json files
-            fmri_js = [fmri_file(1:end-7) '.json'];
+            fmri_js = replace(fmri_file,'.nii.gz','.json'); %[fmri_file(1:end-7) '.json'];
             copyfile(fmri_js,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),[fmri_name(1:end-4) '.json']));
-            t1_js = [t1_file(1:end-7) '.json'];
-            copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-4) '.json']));
+%            t1_js = [t1_file(1:end-7) '.json'];
+%            copyfile(t1_js,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i),[t1_name(1:end-4) '.json']));
         end
         copyfile(fmri_file,sprintf('%s/preprocess/FunImg/%s/%s',out_dir,num2str(i),fmri_name)); % original T1 and rsfMRI
         copyfile(t1_file,sprintf('%s/preprocess/T1Img/%s/%s',out_dir,num2str(i) ,t1_name));% original T1 and rsfMRI

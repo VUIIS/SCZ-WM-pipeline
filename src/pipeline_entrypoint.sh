@@ -13,8 +13,6 @@
 #                        --xnat_subject XNAT_subject_name
 #                        --xnat_session XNAT_session_name
 #
-# Note: fmri input must be within curly brackets for Matlab to accept 
-#       multiple inputs. Separate file names by comma.
 
 echo Running $(basename "${BASH_SOURCE}")
 
